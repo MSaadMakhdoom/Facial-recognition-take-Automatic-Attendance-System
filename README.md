@@ -1,0 +1,2 @@
+# Facial-recognition-take-Automatic-Attendance-System
+The Real-Time Automatic Attendance System is a project aimed at improving attendance tracking and management in educational institutions, offices, and other organizations. The system utilizes modern technologies such as computer vision and machine learning to provide real-time tracking of attendance and automatically generate attendance reports.
