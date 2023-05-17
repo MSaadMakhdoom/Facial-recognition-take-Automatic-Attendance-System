@@ -1,6 +1,8 @@
 FROM python:3.8
 
 WORKDIR /app
+# Install CMake
+RUN apt-get update && apt-get install -y cmake
 
 COPY requirements.txt ./
 
