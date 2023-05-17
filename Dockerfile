@@ -1,8 +1,8 @@
-FROM python:3.8
+FROM python:3.8-slim-buster
 
 WORKDIR /app
-# Install CMake
-RUN apt-get update && apt-get install -y cmake
+
+RUN apt-get update && apt-get install -y build-essential
 
 COPY requirements.txt ./
 
