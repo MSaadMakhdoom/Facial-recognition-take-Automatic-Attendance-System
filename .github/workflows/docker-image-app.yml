@@ -21,6 +21,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Install CMake
+        run: sudo apt install cmake
+
       - name: Build the Docker image
         run: docker build -t real-time-automatic-attendance-system:latest .
 
