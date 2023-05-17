@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Attendance{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .centered-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 20px;
+        }
+
+        .camera-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .camera-button:hover {
+            background-color: #0056b3;
+        }
+
+        #camera-preview {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered-content">
+        <button id="start-camera" class="camera-button">Open Camera</button>
+        
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    const startCameraButton = document.getElementById('start-camera');
+    
+    let cameraStream = null;
+
+    startCameraButton.addEventListener('click', () => {
+        // Call the attendance function on the server
+        $.get("{% url 'attendance' %}", function(data) {
+            // Log the response from the server
+            console.log(data);
+        });
+
+       
+    });
+
+   
+  
+</script>
+
+</body>
+{% endblock %}
