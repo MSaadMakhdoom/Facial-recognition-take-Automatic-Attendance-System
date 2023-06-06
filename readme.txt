@@ -29,3 +29,12 @@ dvc remote add -d img s3://projectmlops/
 # Add images to remote folder
 dvc add ./img
 
+
+# dvc pull data s3 bucket
+aws configure
+
+dvc pull
+
+
+# DVC pipeline
+dvc run -n model_train -d face_detection_model_svm.py -o confusion_matrix.png --no-exec python3 face_detection_model_svm.py                     

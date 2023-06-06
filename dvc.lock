@@ -1,0 +1,15 @@
+schema: '2.0'
+stages:
+  model_train:
+    cmd: python3 face_detection_model_svm.py
+    deps:
+    - path: face_detection_model_svm.py
+      md5: 0cb9da5b2a91d221851d95c77af41333
+      size: 8203
+    outs:
+    - path: confusion_matrix.png
+      md5: 0d4b1680c3308cbf9f430271b7f91b16
+      size: 28528
+    - path: metrics.json
+      md5: 9a0379eaa11dd7b9e9995a62a5f21656
+      size: 17

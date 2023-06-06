@@ -1,0 +1,10 @@
+stages:
+  model_train:
+    cmd: python3 face_detection_model_svm.py
+    deps:
+    - face_detection_model_svm.py
+    outs:
+    - confusion_matrix.png
+    metrics:
+    - metrics.json:
+        cache: false

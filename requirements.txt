@@ -19,3 +19,6 @@ scipy
 sqlparse==0.4.4
 tifffile==2023.4.12
 tzdata==2023.3
+matplotlib
+scikit-learn
+seaborn
