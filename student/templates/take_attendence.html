@@ -53,7 +53,7 @@
 
     startCameraButton.addEventListener('click', () => {
         // Call the attendance function on the server
-        $.get("{% url 'attendance' %}", function(data) {
+        $.get("{% url 'student:attendance' %}", function(data) {
             // Log the response from the server
             console.log(data);
         });

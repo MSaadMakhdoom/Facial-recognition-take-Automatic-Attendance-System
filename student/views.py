@@ -17,23 +17,30 @@ from skimage import feature as detector
 from django.core.mail import send_mail
 # -----------------------------------------------------------------------------------------
 
+
 def load_all_students():
     std_img = []
     std_id = []
-
+    print("Start Load Student Images")
     students = Student.objects.all()
     print("Load Student Images")
     for student in students:
         print(student.id)
         img_path = os.path.join(settings.MEDIA_ROOT, str(student.image))
         print(img_path)
-        # reading image and append to list
-        img_path = face_recognition.load_image_file(img_path)
-        print(img_path)
-        std_id.append(student.id)
-        std_img.append(img_path)
-
-    return std_id,std_img
+        
+        # Check if the image path is valid and skip if not
+        if os.path.isfile(img_path):
+            # Load the image file using face_recognition library
+            image = face_recognition.load_image_file(img_path)
+            print(image)
+            std_id.append(student.id)
+            std_img.append(image)
+        else:
+            print("Invalid image path:", img_path)
+        
+    print("Finish Load Student Images")
+    return std_id, std_img
 
 
 def preprocess(image):
@@ -81,11 +88,13 @@ def extract_image_features(preprocessed_face_images):
 # -----------------------------------------------------------------------------------------
 
 def FaceEncoding_img( imges):
+    print("Start Encoding Image ")
     FaceencodeList = []
     for img in imges:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face = face_recognition.face_encodings(img)[0]
         FaceencodeList.append(face)
+    print("Finish Econding images")
     return FaceencodeList
 
 
@@ -93,27 +102,32 @@ def run(request):
     std_id,std_img = load_all_students()
     encodeListknown = FaceEncoding_img(std_img)
     cap = cv2.VideoCapture(0)
+    print("start video capture")
     while True:
         success, img = cap.read()
+        print("resize image")
         imgc = cv2.resize(img, (0, 0), None, 0.25, 0.25)
         imgc = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         fasescurrent = face_recognition.face_locations(imgc)
         encode_fasescurrent = face_recognition.face_encodings(imgc, fasescurrent)
-
+        print("Start Matching the face ")
         for encodeFace, faceloc in zip(encode_fasescurrent, fasescurrent):
             matches_face = face_recognition.compare_faces(encodeListknown, encodeFace)
+            print("compare")
             face_distence = face_recognition.face_distance(encodeListknown, encodeFace)
+            print("find distance")
             matchindex = np.argmin(face_distence)
 
             if matches_face[matchindex]:
+                print("Face match database image")
                 name = std_id[matchindex]
                 y1, x2, y2, x1 = faceloc
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        
+                print("mark attendence ")
                 add_attendance(request,name,True)
 
-        cv2.imshow("campare", img)
+        # cv2.imshow("campare", img)
 
         key = cv2.waitKey(1)
         if key == 27:
@@ -167,7 +181,7 @@ def attendance(request):
         draw_bounding_boxes(frame, faces)
 
         # Display the frame on the web page.
-        cv2.imshow('Attendance', frame)
+        # cv2.imshow('Attendance', frame)
         
         key = cv2.waitKey(1)
         if key == 27:
@@ -181,7 +195,8 @@ def attendance(request):
 
 
 
-
+def Home_Page(request):
+    return render(request, 'main_page.html')
 
 def Home_Page_Automated_Attendence(request):
     return render(request, 'base.html')
@@ -198,7 +213,7 @@ def teacher_login_view(request):
         
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('automate-attendence'))
+            return HttpResponseRedirect(reverse('student:automate-attendence'))
         else:
             return render(request, 'teacher_login.html', {'error': 'Invalid login credentials'})
     else:
@@ -222,7 +237,7 @@ def add_attendance(request, student_id, status):
         Attendance.objects.create(student=student,status =True)
         
         # Now, we send the email.
-        send_email_to_user(student,now)
+        # send_email_to_user(student,now)
 
 
     else:
@@ -313,4 +328,4 @@ def student_login(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('teacher_login')
+    return redirect('student:teacher_login')

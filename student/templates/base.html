@@ -114,13 +114,13 @@
         <h2>Attendence</h2>
         <ul>
           <li>
-            <a href="{% url 'take-attendence' %}"><i class="fas fa-home"></i>Home</a>
+            <a href="{% url 'student:take-attendence' %}"><i class="fas fa-home"></i>Home</a>
           </li>
           <li>
-            <a href="{% url 'teacher_view_attendence_report' %}"><i class="fas fa-user"></i>Report</a>
+            <a href="{% url 'student:teacher_view_attendence_report' %}"><i class="fas fa-user"></i>Report</a>
           </li>
           <li>
-            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+            <a href="{% url 'student:logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a>
           </li>
 
         </ul>
