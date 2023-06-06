@@ -22,3 +22,5 @@ tzdata==2023.3
 matplotlib
 scikit-learn
 seaborn
+dvc
+dvc-s3
