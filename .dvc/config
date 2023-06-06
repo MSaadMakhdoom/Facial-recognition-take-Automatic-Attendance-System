@@ -1,0 +1,4 @@
+[core]
+    remote = img
+['remote "img"']
+    url = s3://mlopsproject/
