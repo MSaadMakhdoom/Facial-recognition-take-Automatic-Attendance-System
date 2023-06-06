@@ -22,7 +22,10 @@ pip install dvc-s3
 # dvc stroage name 
 img
 
-dvc remote add -d img s3://mlopsproject/
+
+
+dvc remote add -d img s3://projectmlops/
 
 # Add images to remote folder
-dvc add ./img/*.{jpg,jpeg,png}
+dvc add ./img
+
