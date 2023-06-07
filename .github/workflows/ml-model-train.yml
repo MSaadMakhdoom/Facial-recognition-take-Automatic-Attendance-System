@@ -17,13 +17,12 @@ jobs:
         aws-secret-access-key: ${{ secrets.ACCESSKEY }}
         aws-region: us-east-1
     
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Install Python
-      uses: actions/setup-python@v2
+    - name: Checkout code  
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.10
+        python-version: "3.10"
     
     - name: Install dependencies
       run: pip install -r requirements.txt
