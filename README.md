@@ -29,3 +29,110 @@ updating faces in the database
 mechanisms to ensure that only authorized personnel can access the attendance
 data.
 10. User-Friendly Interface: The system should have a user-friendly interface.
+
+
+# Setup Instructions
+
+## Virtual Environment
+
+Create a virtual environment:
+
+```
+python3 -m venv venv
+```
+
+Activate the virtual environment:
+
+```
+source venv/bin/activate
+```
+
+Install the required packages from `requirements.txt`:
+
+```
+pip install -r requirements.txt
+```
+
+## Database Schema
+
+Apply the necessary changes to the database schema:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+## Django Application Execution
+
+Start the Django application:
+
+```
+python manage.py runserver
+```
+
+## DVC Setup
+
+Install DVC and the S3 bucket remote storage:
+
+```
+pip install dvc-s3
+```
+
+Set the DVC storage name:
+
+```
+dvc remote add -d img s3://projectmlops/
+```
+
+Add the dataset images to the remote folder:
+
+```
+dvc add ./img
+```
+
+Pull data from the S3 bucket:
+
+```
+aws configure
+dvc pull
+```
+
+Create and run the DVC pipeline:
+
+```
+dvc run -n model_train -d face_detection_model_svm.py -o confusion_matrix.png --no-exec python3 face_detection_model_svm.py
+dvc repro
+```
+
+## Airflow Setup
+
+Install Apache Airflow:
+
+```
+pip install apache-airflow
+```
+
+Create an Airflow directory:
+
+```
+mkdir Airflow
+export AIRFLOW_HOME=.
+```
+
+Initialize the Airflow database:
+
+```
+airflow db init
+```
+
+Create an admin account:
+
+```
+airflow users create --username msaad --firstname Muhammad --lastname Saad --email msaadmakhdoom@gmail.com --role Admin --password 123456
+```
+
+Start the Airflow web server:
+
+```
+airflow webserver -p 8080
+```

@@ -45,28 +45,6 @@ def load_image_dataset(directory):
     
 
 
-def detect_faces(image):
-
-    # Convert to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Load the face cascade classifier
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_default.xml')
-
-    # Detect faces in the image
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-
-    # Extract the face pixels
-    x, y, w, h = faces[0]
-    face_pixels = image[y:y+h, x:x+w]
-#     face_pixels = []
-#     for (x, y, w, h) in faces:
-#         face_pixels.extend(image[y:y+h, x:x+w].reshape(-1, 3))
-
-    return face_pixels
-
-
-
 def preprocess_image(img):
     
     # Convert to grayscale if necessary
@@ -86,37 +64,6 @@ def preprocess_image(img):
     
     return thresh
 
-
-
-def detect_faces(image_path):
-    # Load the image
-    image = cv2.imread(image_path)
-
-    # Convert to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Load the face cascade classifier
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_default.xml')
-
-    # Detect faces in the image
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-
-    # Extract the face pixels
-    face_pixels = []
-    x, y, w, h = faces[0]
-    face_pixels.append(image[y:y+h, x:x+w])
-    
-#     face_pixels = []
-#     for (x, y, w, h) in faces:
-#         face_pixels.append(image[y:y+h, x:x+w])
-
-    # Combine the face pixels into a single image
-    if len(face_pixels) > 0:
-        face_image = np.concatenate(face_pixels, axis=1)
-    else:
-        face_image = np.zeros((1,1,3), np.uint8)
-
-    return face_image
 
 
 
@@ -174,20 +121,7 @@ def preprocess_images(images, target_size):
         preprocessed_images.append(preprocessed_image)
     return preprocessed_images
 
-def display_images(images, preprocessed_images):
-    # Display the faces
-    if len(preprocessed_images) > 0:
-        fig = plt.figure(figsize=(10, 10))
-        num_faces = len(preprocessed_images)
-        rows = cols = int(num_faces**0.5) + 1 if int(num_faces**0.5)**2 < num_faces else int(num_faces**0.5)
-        for i, face in enumerate(preprocessed_images):
-            fig.add_subplot(rows, cols, i+1)
-            plt.imshow(cv2.cvtColor(face, cv2.COLOR_BGR2RGB))
-            plt.axis('off')
 
-        plt.show()
-    else:
-        print('No faces detected in any images.')
 
 
 
