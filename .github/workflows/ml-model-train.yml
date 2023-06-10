@@ -18,7 +18,8 @@ jobs:
         aws-region: us-east-1
     
     - name: Checkout code  
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
+    
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -27,9 +28,8 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements.txt
     
-        
     - name: Pull data with DVC
       run: dvc pull
     
-    - name:  DVC pipeline
-      run: dvc repro 
+    - name: DVC pipeline
+      run: dvc repro
