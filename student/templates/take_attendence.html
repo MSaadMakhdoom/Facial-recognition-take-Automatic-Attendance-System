@@ -1,69 +1,101 @@
+
+
+
 {% extends 'base.html' %}
 
-{% block title %}Take Attendance{% endblock %}
+{% block title %}Attendance Report{% endblock %}
 
 {% block content %}
-    <style>
-        body {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-
-        .centered-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            gap: 20px;
-        }
-
-        .camera-button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .camera-button:hover {
-            background-color: #0056b3;
-        }
-
-        #camera-preview {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 5px;
-        }
-    </style>
+<head>
+    <title>Camera Streaming</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <div class="centered-content">
-        <button id="start-camera" class="camera-button">Open Camera</button>
-        
+    <div id="app">
+        <button v-if="!stream" v-on:click="startCamera">Open Camera</button>
+        <button v-else v-on:click="stopCamera">Close Camera</button>
+        <video v-if="stream" ref="videoElement" autoplay></video>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    const startCameraButton = document.getElementById('start-camera');
-    
-    let cameraStream = null;
 
-    startCameraButton.addEventListener('click', () => {
-        // Call the attendance function on the server
-        $.get("{% url 'student:attendance' %}", function(data) {
-            // Log the response from the server
-            console.log(data);
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                stream: null,
+                mediaRecorder: null,
+                recordedChunks: []
+            },
+            methods: {
+                startCamera() {
+                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                            .then(stream => {
+                                this.stream = stream;
+                                this.$nextTick(() => {
+                                    this.$refs.videoElement.srcObject = stream;
+                                });
+
+                                // Start sending the video stream to the backend
+                                this.sendVideoStream(stream);
+                            })
+                            .catch(error => {
+                                console.log("Error accessing camera:", error);
+                            });
+                    } else {
+                        console.log("getUserMedia not supported on your browser");
+                    }
+                },
+                stopCamera() {
+                    if (this.stream) {
+                        this.stream.getTracks().forEach(track => {
+                            track.stop();
+                        });
+                        this.stream = null;
+
+                        // Stop sending the video stream to the backend
+                        this.stopVideoStream();
+                    }
+                },
+                sendVideoStream(stream) {
+  const mediaRecorder = new MediaRecorder(stream);
+  const recordedChunks = [];
+
+  mediaRecorder.ondataavailable = event => {
+    if (event.data && event.data.size > 0) {
+      recordedChunks.push(event.data);
+    }
+  };
+
+  mediaRecorder.onstop = () => {
+    const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+
+    const formData = new FormData();
+    formData.append('video', videoBlob);
+
+    axios
+      .post('/take-attendence/', formData)
+      .then(response => {
+        console.log('Video stream sent to the backend successfully');
+      })
+      .catch(error => {
+        console.log('Error sending the video stream to the backend:', error);
+      });
+  };
+
+  mediaRecorder.start();
+
+  // Store the mediaRecorder instance and recordedChunks in the Vue component's data
+  this.mediaRecorder = mediaRecorder;
+  this.recordedChunks = recordedChunks;
+},
+
+                stopVideoStream() {
+                    // Implement the necessary logic to stop the video stream
+                }
+            }
         });
-
-       
-    });
-
-   
-  
-</script>
-
+    </script>
 </body>
 {% endblock %}
+

@@ -15,6 +15,13 @@ import numpy as np
 from django.utils import timezone
 from skimage import feature as detector
 from django.core.mail import send_mail
+from django.http import HttpResponse
+import json
+
+
+from PIL import Image, ImageDraw, ImageFont
+
+
 # -----------------------------------------------------------------------------------------
 
 
@@ -140,6 +147,67 @@ def run(request):
     return render(request, 'take_attendence.html')
 
 
+std_id, std_img = load_all_students()
+encodeListknown = FaceEncoding_img(std_img)
+
+
+
+
+def take_attendence(request):
+    if request.method == 'POST':
+
+        # Get the video stream from the frontend
+        video_stream = request.FILES.get('video')
+
+        print ('camera video stream',video_stream)
+
+        video_path = os.path.join('/tmp', video_stream.name)
+        with open(video_path, 'wb') as file:
+            for chunk in video_stream.chunks():
+                file.write(chunk)
+
+        # Create a VideoCapture object
+        cap = cv2.VideoCapture(video_path)
+        print ('capture video ')
+        # Continuously read frames from the video stream
+        while True:
+            success, img = cap.read()
+            if not success:
+                break
+
+            # Resize and convert the frame to RGB
+            imgc = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+            imgc = cv2.cvtColor(imgc, cv2.COLOR_BGR2RGB)
+
+            # Detect and encode the faces in the frame
+            faces_current = face_recognition.face_locations(imgc)
+            encode_faces_current = face_recognition.face_encodings(imgc, faces_current)
+
+            # Compare the face encodings to the known faces
+            for encodeFace, faceLoc in zip(encode_faces_current, faces_current):
+                matches_face = face_recognition.compare_faces(encodeListknown, encodeFace)
+                face_distances = face_recognition.face_distance(encodeListknown, encodeFace)
+                match_index = np.argmin(face_distances)
+
+                # If a match is found, mark the student's attendance as present
+                if matches_face[match_index]:
+                    name = std_id[match_index]
+                    y1, x2, y2, x1 = faceLoc
+                    # Mark attendance
+                    add_attendance(request, name, True)
+
+          
+
+        # Release the VideoCapture object
+        cap.release()
+
+        return HttpResponse('Video received and processed successfully')
+
+    return render(request, 'take_attendence.html')
+
+
+#-----------------------------------------------------------------------------------------------
+
 
 def detect_faces(frame):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -200,11 +268,13 @@ def Home_Page(request):
 
 def Home_Page_Automated_Attendence(request):
     return render(request, 'base.html')
+# ----------------------------------------------------------------------------------------------------------
+# def take_attendence(request):
+#     return render(request, 'take_attendence.html')
 
-def take_attendence(request):
-    return render(request, 'take_attendence.html')
 
 
+# ----------------------------------------------------------------------------------------------------------
 def teacher_login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -247,7 +317,7 @@ def add_attendance(request, student_id, status):
             Attendance.objects.create(student=student,status =True)
 
             # Now, we send the email.
-            send_email_to_user(student,now)
+            #send_email_to_user(student,now)
 
         else:
             print("Attendance already taken for this student within the last 10 minutes.")
