@@ -1,4 +1,4 @@
-[![Python](https://img.shields.io/badge/Python-3.x-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10-blue)](https://www.python.org/)
 This project utilizes  Python programing for building the application
 
 [![Docker](https://img.shields.io/badge/Docker-Containerization-blue)](https://www.docker.com/)
@@ -8,7 +8,6 @@ This project utilizes Docker for containerizing .
 This project utilizes AWS ECS (Elastic Container Service) for running containers.
 
 [![DVC](https://img.shields.io/badge/DVC-Data%20Version%20Control-orange)](https://dvc.org/)
-
 This project utilizes DVC (Data Version Control) for managing and versioning data sets.
 
 
@@ -130,7 +129,10 @@ Install Apache Airflow:
 
 ```
 pip install apache-airflow
+
+pip install apache-airflow-providers-cncf-kubernetes
 ```
+
 
 Create an Airflow directory:
 
