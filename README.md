@@ -1,3 +1,14 @@
+
+
+[![Apache Airflow](https://img.shields.io/badge/Apache-Airflow-red)](https://airflow.apache.org/)
+This project utilizes Apache Airflow to automate and orchestrate batch data processing tasks.
+
+
+[![Python](https://img.shields.io/badge/Python-3.x-blue)](https://www.python.org/)
+
+This project utilizes  Python for building the application
+
+
 # Facial-recognition-take-Automatic-Attendance-System
 The Real-Time Automatic Attendance System is a project aimed at improving attendance tracking and management in educational institutions, offices, and other organizations. The system utilizes modern technologies such as computer vision and machine learning to provide real-time tracking of attendance and automatically generate attendance reports.
 ##
