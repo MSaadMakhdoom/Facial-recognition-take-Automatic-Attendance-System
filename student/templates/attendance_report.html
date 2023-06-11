@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends 'main_page.html' %}
+
+{% block title %}Teacher Login{% endblock %}
+
+{% block content %}
 <head>
     <title>Attendance Report</title>
     <style>
@@ -70,4 +73,5 @@
         </tbody>
     </table>
     <a href="{% url 'student:student_login' %}"> Logout</a>
-</html>
+</body>
+{% endblock %}

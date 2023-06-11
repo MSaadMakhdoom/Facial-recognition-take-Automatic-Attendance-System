@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Automated Attendence System</title>
+  <title>Automated Attendance System</title>
   <style>
     /* Styles for the navigation bar */
     .navbar {
@@ -57,10 +57,16 @@
     /* Styles for the login links */
     .login-links {
       display: none;
+      text-align: center;
     }
     
     .login-links.show {
       display: block;
+    }
+    
+    .login-links a {
+      display: block;
+      margin-bottom: 10px;
     }
   </style>
   <script>
@@ -80,12 +86,12 @@
     <div id="loginSection" class="login-links">
       <a href="{% url 'student:teacher_login' %}">Teacher Login</a>
       <a href="{% url 'student:student_login' %}">Student Login</a>
-      
     </div>
   </div>
   
-  <div class="container">
-    <h1>Welcome!</h1>
+  <div>
+    {% block content %}
+    {% endblock %}
   </div>
   
 </body>
