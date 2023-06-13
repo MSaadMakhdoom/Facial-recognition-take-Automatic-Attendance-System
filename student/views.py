@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from .models import Class, Student, Attendance,Teacher
-from django.contrib import messages
 # Create your views here.
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -16,10 +15,7 @@ from django.utils import timezone
 from skimage import feature as detector
 from django.core.mail import send_mail
 from django.http import HttpResponse
-import json
 
-
-from PIL import Image, ImageDraw, ImageFont
 
 
 # -----------------------------------------------------------------------------------------
