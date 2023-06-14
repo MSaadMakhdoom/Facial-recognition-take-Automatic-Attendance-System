@@ -11,10 +11,6 @@ This project utilizes AWS ECS (Elastic Container Service) for running containers
 This project utilizes DVC (Data Version Control) for managing and versioning data sets.
 
 
-[![Apache Airflow](https://img.shields.io/badge/Apache-Airflow-red)](https://airflow.apache.org/)
-This project utilizes Apache Airflow to automate and orchestrate batch data processing tasks and model training.
-
-
 
 
 # Facial-recognition-take-Automatic-Attendance-System
