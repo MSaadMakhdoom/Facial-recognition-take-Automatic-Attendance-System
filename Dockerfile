@@ -15,7 +15,7 @@ RUN apt-get install -y --no-install-recommends \
     yasm \
     pkg-config \
     libswscale-dev \
-    libtbb2 \
+    libtbbmalloc2 \
     libtbb-dev \
     libjpeg-dev \
     libpng-dev \
@@ -23,6 +23,7 @@ RUN apt-get install -y --no-install-recommends \
     libopenjp2-7-dev \
     libavformat-dev \
     libpq-dev
+
     
 # Install CMake
 RUN apt-get update && apt-get install -y cmake
